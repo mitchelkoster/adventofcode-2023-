@@ -1,2 +1,2 @@
-# adventofcode-2023-
+# adventofcode-2024
 Learning Golang
