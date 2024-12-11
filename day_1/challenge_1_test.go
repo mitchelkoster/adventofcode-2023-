@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-type Tuple struct {
-	First int
-	Last  int
+type ListItem struct {
+	Left  int
+	Right int
 }
 
-func ChallengeParser(content []string) ([]Tuple, error) {
-	numberTuple := []Tuple{}
+func ChallengeParser(content []string) ([]ListItem, error) {
+	numberListItem := []ListItem{}
 	re := regexp.MustCompile(`\d+`)
 
 	for _, line := range content {
@@ -24,7 +24,7 @@ func ChallengeParser(content []string) ([]Tuple, error) {
 			return nil, fmt.Errorf("Only one match found on line")
 		}
 
-		first, err := strconv.Atoi(matches[0])
+		Left, err := strconv.Atoi(matches[0])
 		if err != nil {
 			return nil, err
 		}
@@ -34,10 +34,10 @@ func ChallengeParser(content []string) ([]Tuple, error) {
 			return nil, err
 		}
 
-		numberTuple = append(numberTuple, Tuple{First: first, Last: second})
+		numberListItem = append(numberListItem, ListItem{Left: Left, Right: second})
 	}
 
-	return numberTuple, nil
+	return numberListItem, nil
 }
 
 func TestParseChallengeFile(t *testing.T) {
@@ -48,16 +48,16 @@ func TestParseChallengeFile(t *testing.T) {
 		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
 	}
 
-	numberTuples, err := ChallengeParser(content)
+	listItems, err := ChallengeParser(content)
 	if err != nil {
 		t.Fatalf("ChallengeParser failed: %v", err)
 	}
 
-	if len(numberTuples) != 6 {
-		t.Fatalf("Expected 6 tuples, got %d", len(numberTuples))
+	if len(listItems) != 6 {
+		t.Fatalf("Expected 6 ListItems, got %d", len(listItems))
 	}
 
-	if first, last := numberTuples[0].First, numberTuples[0].Last; first != 3 || last != 4 {
-		t.Fatalf("First tuple is incorrect: expected (3, 4), got (%d, %d)", first, last)
+	if Left, Right := listItems[0].Left, listItems[0].Right; Left != 3 || Right != 4 {
+		t.Fatalf("Left ListItem is incorrect: expected (3, 4), got (%d, %d)", Left, Right)
 	}
 }
