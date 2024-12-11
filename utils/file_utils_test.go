@@ -1,70 +1,25 @@
-package main
+package utils_test
 
 import (
+	"adventofcode-2024/utils"
 	"bufio"
 	"fmt"
-	"os"
 	"slices"
 	"strings"
 	"testing"
 )
 
-func ReadFile(filename string, processContent func([]byte) error) ([]byte, error) {
-	fh, err := os.ReadFile(filename) // auto closes?
-	if err != nil {
-		return nil, err
-	}
-
-	// Callback provided
-	if processContent != nil {
-		if err := processContent(fh); err != nil {
-			return nil, err
-		}
-	}
-
-	return fh, nil
-}
-
-func ReadFileLineByLine(filename string, processLine func(string) error) ([]string, error) {
-	fh, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	defer fh.Close()
-
-	// appending is more efficient than inserts used below
-	var lines []string
-	scanner := bufio.NewScanner(fh)
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		// Callback provided
-		if processLine != nil {
-			if err := processLine(line); err != nil {
-				return nil, err
-			}
-		}
-
-		lines = append(lines, line)
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return lines, nil
-}
-
 func TestReadFile(t *testing.T) {
-	content, err := ReadFile("../example.txt", nil)
+	fileUtils := utils.FileUtils{}
+	content, err := fileUtils.ReadFile("day_1_example.txt", nil)
+
 	if err != nil {
-		t.Fatalf("ReadFileContents failed: %v", err)
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
 	}
 
 	var tmpSlices []string
 
-	// We can do this straight away? (see: ReadFileLineByLine)
+	// We can do this straight away? (see: fileUtils.ReadFileLineByLine)
 	scanner := bufio.NewScanner(strings.NewReader(string(content)))
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -78,6 +33,8 @@ func TestReadFile(t *testing.T) {
 }
 
 func TestReadFileWithCallback(t *testing.T) {
+	fileUtils := utils.FileUtils{}
+
 	callback := func(content []byte) error {
 		fmt.Printf("Processing bytes: %d\n", len(content))
 		if len(content) == 0 {
@@ -103,17 +60,18 @@ func TestReadFileWithCallback(t *testing.T) {
 	}
 
 	fmt.Println("callback:")
-	_, err := ReadFile("../example.txt", callback)
+	_, err := fileUtils.ReadFile("day_1_example.txt", callback)
 	if err != nil {
-		t.Fatalf("ReadFileContents failed: %v", err)
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
 	}
 }
 
 func TestReadFileLineByLine(t *testing.T) {
-	content, err := ReadFileLineByLine("../example.txt", nil)
+	fileUtils := utils.FileUtils{}
+	content, err := fileUtils.ReadFileLineByLine("day_1_example.txt", nil)
 
 	if err != nil {
-		t.Fatalf("ReadFileContents failed: %v", err)
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
 	}
 
 	if len(content) != 6 {
@@ -122,16 +80,18 @@ func TestReadFileLineByLine(t *testing.T) {
 }
 
 func TestReadFileLineByLineWithCallabck(t *testing.T) {
+	fileUtils := utils.FileUtils{}
+
 	callback := func(line string) error {
 		fmt.Printf("Processing line: %s\n", line)
 		return nil
 	}
 
 	fmt.Println("callback")
-	content, err := ReadFileLineByLine("../example.txt", callback)
+	content, err := fileUtils.ReadFileLineByLine("day_1_example.txt", callback)
 
 	if err != nil {
-		t.Fatalf("ReadFileContents failed: %v", err)
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
 	}
 
 	if len(content) != 6 {
