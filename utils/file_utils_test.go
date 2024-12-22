@@ -36,7 +36,6 @@ func TestReadFileWithCallback(t *testing.T) {
 	fileUtils := utils.FileUtils{}
 
 	callback := func(content []byte) error {
-		fmt.Printf("Processing bytes: %d\n", len(content))
 		if len(content) == 0 {
 			return fmt.Errorf("file content is empty") // Return error instead of using t.Fatal
 		}
@@ -59,7 +58,6 @@ func TestReadFileWithCallback(t *testing.T) {
 		return nil
 	}
 
-	fmt.Println("callback:")
 	_, err := fileUtils.ReadFile("day_1_example.txt", callback)
 	if err != nil {
 		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
@@ -83,11 +81,9 @@ func TestReadFileLineByLineWithCallabck(t *testing.T) {
 	fileUtils := utils.FileUtils{}
 
 	callback := func(line string) error {
-		fmt.Printf("Processing line: %s\n", line)
 		return nil
 	}
 
-	fmt.Println("callback")
 	content, err := fileUtils.ReadFileLineByLine("day_1_example.txt", callback)
 
 	if err != nil {

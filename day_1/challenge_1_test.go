@@ -3,6 +3,7 @@ package day_1_test
 import (
 	"adventofcode-2024/day_1"
 	"adventofcode-2024/utils"
+	"fmt"
 	"testing"
 )
 
@@ -28,7 +29,7 @@ func TestParseChallengeFile(t *testing.T) {
 	}
 }
 
-func TestChallengeSolution(t *testing.T) {
+func TestChallengeExample(t *testing.T) {
 	fileUtils := utils.FileUtils{}
 	content, err := fileUtils.ReadFileLineByLine("example.txt", nil)
 
@@ -75,4 +76,25 @@ func TestChallengeSolution(t *testing.T) {
 	if day_1.SumOfDistances(orderedListItems) != 11 {
 		t.Fatalf("Expeced (11), got (%d)", day_1.SumOfDistances(orderedListItems))
 	}
+}
+
+func TestChallengeSolution(t *testing.T) {
+	fileUtils := utils.FileUtils{}
+	content, err := fileUtils.ReadFileLineByLine("input.txt", nil)
+
+	if err != nil {
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
+	}
+
+	listItems, err := day_1.ChallengeParser(content)
+	if err != nil {
+		t.Fatalf("ChallengeParser failed: %v", err)
+	}
+
+	orderedListItems, err := day_1.OrderListemsAscending(listItems)
+	if err != nil {
+		t.Fatalf("OrderListemsAscending failed: %v", err)
+	}
+
+	fmt.Printf("Solution: %d\n", day_1.SumOfDistances(orderedListItems))
 }
