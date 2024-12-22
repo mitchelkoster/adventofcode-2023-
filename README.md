@@ -1,2 +1,6 @@
-# adventofcode-2023-
-Learning Golang
+# adventofcode-2024
+Learning Golang.
+
+```bash
+go test ./... -v
+````
