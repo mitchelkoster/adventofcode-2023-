@@ -9,9 +9,11 @@ import (
 )
 
 type ListItem struct {
-	Left     int
-	Right    int
-	Distance int
+	Left            int
+	Right           int
+	Distance        int
+	OccurenceFound  int
+	SimularityScore int
 }
 
 func ChallengeParser(content []string) ([]ListItem, error) {
@@ -36,22 +38,36 @@ func ChallengeParser(content []string) ([]ListItem, error) {
 		}
 
 		numberListItem = append(numberListItem, ListItem{
-			Left:     first,
-			Right:    last,
-			Distance: 0,
+			Left:            first,
+			Right:           last,
+			Distance:        0,
+			OccurenceFound:  0,
+			SimularityScore: 0,
 		})
 	}
 
 	return numberListItem, nil
 }
 
-func OrderListemsAscending(listItems []ListItem) ([]ListItem, error) {
+func SolveChallenge(listItems []ListItem) ([]ListItem, error) {
+	occurencesMap := make(map[int]int)
 	leftList, rightList := []int{}, []int{}
+
 	for _, item := range listItems {
+		// Split map in left- and right splice
 		leftList = append(leftList, item.Left)
 		rightList = append(rightList, item.Right)
+
+		// Add map item to map if not yet found
+		occurences, ok := occurencesMap[item.Right]
+		if ok {
+			occurencesMap[item.Right] = occurences + 1
+		} else {
+			occurencesMap[item.Right] = 1
+		}
 	}
 
+	// Sort lists
 	if !sort.IntsAreSorted(leftList) {
 		sort.Ints(leftList)
 	}
@@ -60,12 +76,16 @@ func OrderListemsAscending(listItems []ListItem) ([]ListItem, error) {
 		sort.Ints(rightList)
 	}
 
+	// Solve challenge
 	newListItems := []ListItem{}
 	for i, _ := range leftList {
+
 		newListItems = append(newListItems, ListItem{
-			Left:     leftList[i],
-			Right:    rightList[i],
-			Distance: int(math.Abs(float64(leftList[i]) - float64(rightList[i]))),
+			Left:            leftList[i],
+			Right:           rightList[i],
+			Distance:        int(math.Abs(float64(leftList[i]) - float64(rightList[i]))),
+			OccurenceFound:  occurencesMap[leftList[i]],
+			SimularityScore: leftList[i] * occurencesMap[leftList[i]],
 		})
 	}
 
@@ -76,6 +96,15 @@ func SumOfDistances(listItems []ListItem) int {
 	sum := 0
 	for _, item := range listItems {
 		sum += item.Distance
+	}
+
+	return sum
+}
+
+func SumOfSimularityScores(listItems []ListItem) int {
+	sum := 0
+	for _, item := range listItems {
+		sum += item.SimularityScore
 	}
 
 	return sum
