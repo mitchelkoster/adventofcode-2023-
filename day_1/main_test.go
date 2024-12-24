@@ -29,7 +29,7 @@ func TestParseChallengeFile(t *testing.T) {
 	}
 }
 
-func TestChallengeExample(t *testing.T) {
+func TestChallenge1Example(t *testing.T) {
 	fileUtils := utils.FileUtils{}
 	content, err := fileUtils.ReadFileLineByLine("example.txt", nil)
 
@@ -42,9 +42,9 @@ func TestChallengeExample(t *testing.T) {
 		t.Fatalf("ChallengeParser failed: %v", err)
 	}
 
-	orderedListItems, err := day_1.OrderListemsAscending(listItems)
+	orderedListItems, err := day_1.SolveChallenge(listItems)
 	if err != nil {
-		t.Fatalf("OrderListemsAscending failed: %v", err)
+		t.Fatalf("SolveChallenge failed: %v", err)
 	}
 
 	// Test orde results
@@ -78,7 +78,34 @@ func TestChallengeExample(t *testing.T) {
 	}
 }
 
-func TestChallengeSolution(t *testing.T) {
+func TestChallenge2Example(t *testing.T) {
+	fileUtils := utils.FileUtils{}
+	content, err := fileUtils.ReadFileLineByLine("example.txt", nil)
+
+	if err != nil {
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
+	}
+
+	listItems, err := day_1.ChallengeParser(content)
+	if err != nil {
+		t.Fatalf("ChallengeParser failed: %v", err)
+	}
+
+	orderedListItems, err := day_1.SolveChallenge(listItems)
+	if err != nil {
+		t.Fatalf("SolveChallenge failed: %v", err)
+	}
+
+	if orderedListItems[3].OccurenceFound != 3 || orderedListItems[3].SimularityScore != 9 {
+		t.Fatalf("Row 0: Expected (3, 3, 9), got (%d, %d, %d)", orderedListItems[3].Left, orderedListItems[3].OccurenceFound, orderedListItems[3].SimularityScore)
+	}
+
+	if day_1.SumOfSimularityScores(orderedListItems) != 31 {
+		t.Fatalf("Expeced (31), got (%d)", day_1.SumOfSimularityScores(orderedListItems))
+	}
+}
+
+func TestChallenge1Solution(t *testing.T) {
 	fileUtils := utils.FileUtils{}
 	content, err := fileUtils.ReadFileLineByLine("input.txt", nil)
 
@@ -91,10 +118,31 @@ func TestChallengeSolution(t *testing.T) {
 		t.Fatalf("ChallengeParser failed: %v", err)
 	}
 
-	orderedListItems, err := day_1.OrderListemsAscending(listItems)
+	orderedListItems, err := day_1.SolveChallenge(listItems)
 	if err != nil {
-		t.Fatalf("OrderListemsAscending failed: %v", err)
+		t.Fatalf("SolveChallenge failed: %v", err)
 	}
 
 	fmt.Printf("Solution: %d\n", day_1.SumOfDistances(orderedListItems))
+}
+
+func TestChallenge2Solution(t *testing.T) {
+	fileUtils := utils.FileUtils{}
+	content, err := fileUtils.ReadFileLineByLine("input.txt", nil)
+
+	if err != nil {
+		t.Fatalf("fileUtils.ReadFileContents failed: %v", err)
+	}
+
+	listItems, err := day_1.ChallengeParser(content)
+	if err != nil {
+		t.Fatalf("ChallengeParser failed: %v", err)
+	}
+
+	orderedListItems, err := day_1.SolveChallenge(listItems)
+	if err != nil {
+		t.Fatalf("SolveChallenge failed: %v", err)
+	}
+
+	fmt.Printf("Solution: %d\n", day_1.SumOfSimularityScores(orderedListItems))
 }
