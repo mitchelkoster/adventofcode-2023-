@@ -3,4 +3,5 @@ Learning Golang.
 
 ```bash
 go test ./... -v
+go run ./day_N
 ````
